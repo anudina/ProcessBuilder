@@ -1,0 +1,62 @@
+package com.vz.rsync.service;
+
+import java.io.IOException;
+import java.io.StringReader;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+
+public class JasonReader
+{
+    public static void main(String[] args) throws Exception
+    {
+
+//        String json = "{'id': 1001,'firstName': 'Lokesh','lastName': 'Gupta','email': null}";
+        String json = "{\"operation\":\"cp\",\"command\":\"cp s3://njcldn7ericssonpmfiles/azusca21enm-e-ec-c7kx-enmhost-1/4G/SubNetwork=ONRM_ROOT_MO,SubNetwork=MKT_041,MeContext=641288_LINDLY_AVE,ManagedElement=641288_LINDLY_AVE/A20231014.0600-0700-0615-0700_SubNetwork=ONRM_ROOT_MO,SubNetwork=MKT_041,MeContext=641288_LINDLY_AVE,ManagedElement=641288_LINDLY_AVE_statsfile.xml.gz /usr/apps/lteda/lte/data/e_s_cal/ENB/raw_data_files/SubNetwork=ONRM_ROOT_MO,SubNetwork=MKT_041,MeContext=641288_LINDLY_AVE,ManagedElement=641288_LINDLY_AVE/A20231014.0600-0700-0615-0700_SubNetwork=ONRM_ROOT_MO,SubNetwork=MKT_041,MeContext=641288_LINDLY_AVE,ManagedElement=641288_LINDLY_AVE_statsfile.xml.gz\",\"error\":\"NoSuchKey: The specified key does not exist. status code: 404, request id: 9a91681e-ffef-1fff-87c6-043f72cf300a, host id:\"}\n" +
+                "{\"operation\":\"cp\",\"command\":\"cp s3://njcldn7ericssonpmfiles/azusca21enm-e-ec-c7kx-enmhost-1/4G/SubNetwork=ONRM_ROOT_MO,SubNetwork=MKT_041,MeContext=641572_SANTA_MONICA_RELO,ManagedElement=641572_SANTA_MONICA_RELO/A20231014.0600-0700-0615-0700_SubNetwork=ONRM_ROOT_MO,SubNetwork=MKT_041,MeContext=641572_SANTA_MONICA_RELO,ManagedElement=641572_SANTA_MONICA_RELO_statsfile.xml.gz /usr/apps/lteda/lte/data/e_s_cal/ENB/raw_data_files/SubNetwork=ONRM_ROOT_MO,SubNetwork=MKT_041,MeContext=641572_SANTA_MONICA_RELO,ManagedElement=641572_SANTA_MONICA_RELO/A20231014.0600-0700-0615-0700_SubNetwork=ONRM_ROOT_MO,SubNetwork=MKT_041,MeContext=641572_SANTA_MONICA_RELO,ManagedElement=641572_SANTA_MONICA_RELO_statsfile.xml.gz\",\"error\":\"NoSuchKey: The specified key does not exist. status code: 404, request id: af273e1e-ffef-1fff-b70c-0c42a1b943a2, host id:\"}";
+        String[] jsons = json.split("}");
+        JsonReader jsonReader = new JsonReader(new StringReader(json));
+        jsonReader.setLenient(true);
+
+        try
+        {
+            while (jsonReader.hasNext())
+            {
+                JsonToken nextToken = jsonReader.peek();
+
+                if (JsonToken.BEGIN_OBJECT.equals(nextToken)) {
+
+                    jsonReader.beginObject();
+
+                } else if (JsonToken.NAME.equals(nextToken)) {
+
+                    String name = jsonReader.nextName();
+                    System.out.println("Token KEY >>>> " + name);
+
+                } else if (JsonToken.STRING.equals(nextToken)) {
+
+                    String value = jsonReader.nextString();
+                    System.out.println("Token Value >>>> " + value);
+
+                } else if (JsonToken.NUMBER.equals(nextToken)) {
+
+                    long value = jsonReader.nextLong();
+                    System.out.println("Token Value >>>> " + value);
+
+                } else if (JsonToken.NULL.equals(nextToken)) {
+
+                    jsonReader.nextNull();
+                    System.out.println("Token Value >>>> null");
+
+                } else if (JsonToken.END_OBJECT.equals(nextToken)) {
+
+                    jsonReader.endObject();
+
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            jsonReader.close();
+        }
+    }
+}
